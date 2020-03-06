@@ -20,7 +20,7 @@ cron.schedule("30 * * * *", function() {
   console.log("running a task every hour");
 
   var today_var = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
-  today_var = new Date(today);  
+  today_var = new Date(today_var);  
   // today_var.setTime(today_var.getTime()+today_var.getTimezoneOffset()*60*1000);
   var date_var = today_var.getFullYear()+'-'+(today_var.getMonth()+1)+'-'+today_var.getDate();
   var time_var = today_var.getHours() + ":" + today_var.getMinutes() + ":" + today_var.getSeconds();
@@ -76,7 +76,7 @@ app.get('/api', function(req, res) {
       let result = {};
 
       var today_var = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
-      today_var = new Date(today);  
+      today_var = new Date(today_var);  
       // today_var.setTime(today_var.getTime()+today_var.getTimezoneOffset()*60*1000);
       var date_var = today_var.getFullYear()+'-'+(today_var.getMonth()+1)+'-'+today_var.getDate();
       var time_var = today_var.getHours() + ":" + today_var.getMinutes() + ":" + today_var.getSeconds();
