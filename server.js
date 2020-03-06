@@ -13,7 +13,7 @@ var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds(
 var dateTime = '(EST) ' + date+' '+time;
 
 // schedule tasks to be run on the server   
-cron.schedule("* 1 * * *", function() {
+cron.schedule("30 * * * *", function() {
   console.log("running a task every hour");
 
   var today_var = new Date();
@@ -22,9 +22,8 @@ cron.schedule("* 1 * * *", function() {
   dateTime = '(EST) ' + date_var+' '+time_var;
 
   // Launching the Puppeteer controlled headless browser and navigate to the Digimon website
-  puppeteer.launch().then(async function(browser) {
+  puppeteer.launch({headless: true, args:['--no-sandbox']}).then(async function(browser) {
     const page = await browser.newPage();
-    // await page.goto('http://digidb.io/digimon-list/');
     await page.goto('https://www.worldometers.info/coronavirus/');
     let result = {};
     
@@ -65,7 +64,7 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 app.get('/api', function(req, res) {
 
   // Launching the Puppeteer controlled headless browser and navigate to the Digimon website
-  puppeteer.launch().then(async function(browser) {
+  puppeteer.launch({headless: true, args:['--no-sandbox']}).then(async function(browser) {
       const page = await browser.newPage();
       // await page.goto('http://digidb.io/digimon-list/');
       await page.goto('https://www.worldometers.info/coronavirus/');

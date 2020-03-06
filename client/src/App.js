@@ -38,6 +38,7 @@ class App extends Component {
           {/* <img src={logo} className="App-logo" alt="logo" /> */}
           <h1 className="App-title">Covid-19 Stats</h1>
         </header>
+        <p style={{color:"white", fontStyle: "italic"}}>Data referenced from WHO, CDC, worldometer</p>
         <div className="App-intro">
           <p style={{color: "white", fontWeight: "bold"}}><span style={{fontSize: "200%"}}>USA</span> total cases: <span style={{fontSize: "200%"}}>{this.state.USA_total_cases}</span>, total deaths: <span style={{fontSize: "200%"}}>{this.state.USA_total_deaths}</span></p>
           <p style={{color: "white", fontWeight: "bold"}}><span style={{fontSize: "200%"}}>GLOBAL</span> total cases: <span style={{fontSize: "200%"}}>{this.state.GLOBAL_total_cases}</span>, total deaths: <span style={{fontSize: "200%"}}>{this.state.GLOBAL_total_deaths}</span></p>
