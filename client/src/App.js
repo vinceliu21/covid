@@ -51,6 +51,9 @@ class App extends Component {
             theme="dark"
             options={{height: 3000, width: 400}}
           />
+          <div className="sliver">
+
+          </div>
           <TwitterTimelineEmbed
             sourceType="profile"
             screenName="WHO"

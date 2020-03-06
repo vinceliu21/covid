@@ -8,6 +8,7 @@ const port = process.env.PORT || 5000;
 
 var data = {};
 var today = new Date();
+today.setTime(today.getTime()+today.getTimezoneOffset()*60*1000);
 var date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
 var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
 var dateTime = '(EST) ' + date+' '+time;
@@ -17,6 +18,7 @@ cron.schedule("30 * * * *", function() {
   console.log("running a task every hour");
 
   var today_var = new Date();
+  today_var.setTime(today_var.getTime()+today_var.getTimezoneOffset()*60*1000);
   var date_var = today_var.getFullYear()+'-'+(today_var.getMonth()+1)+'-'+today_var.getDate();
   var time_var = today_var.getHours() + ":" + today_var.getMinutes() + ":" + today_var.getSeconds();
   dateTime = '(EST) ' + date_var+' '+time_var;
@@ -71,6 +73,7 @@ app.get('/api', function(req, res) {
       let result = {};
 
       var today_var = new Date();
+      today_var.setTime(today_var.getTime()+today_var.getTimezoneOffset()*60*1000);
       var date_var = today_var.getFullYear()+'-'+(today_var.getMonth()+1)+'-'+today_var.getDate();
       var time_var = today_var.getHours() + ":" + today_var.getMinutes() + ":" + today_var.getSeconds();
       dateTime = '(EST) ' + date_var+' '+time_var;

@@ -5,6 +5,9 @@
   background-color: #292F33;
   font-family: 'Nunito Sans', sans-serif;
 }
+.sliver{
+  width: 10px;
+}
 
 .tweets{
   display: inline-flex;
