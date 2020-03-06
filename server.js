@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const puppeteer = require('puppeteer');
 const cron = require("node-cron");
 const fs = require("fs");
@@ -116,5 +117,13 @@ app.get('/express_backend', (req, res) => {
 // create a GET route
 app.get('/api/data', (req, res) => {
   res.send({ data: data, time: dateTime});
+});
+
+
+app.use(express.static(path.join(__dirname, 'build')));
+
+
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
