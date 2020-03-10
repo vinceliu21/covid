@@ -97,7 +97,7 @@ class App extends Component {
             
             <div style={{width: "60%", margin: "0px auto"}}>
               <p style={{color: "white", fontWeight: "bold"}}>USA Total Cases</p>
-              <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" xtitle="dog" color="white" />
+              <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" color="white" />
             </div>
           </div>
 
