@@ -10,6 +10,7 @@
     "chartkick": "^3.2.0",
     "puppeteer": "^2.1.1",
     "react": "^16.13.0",
+    "react-chartkick": "^0.4.0",
     "react-dom": "^16.13.0",
     "react-scripts": "3.4.0",
     "react-tweet-embed": "^1.2.2",
