@@ -35,6 +35,11 @@
   color: white;
 }
 
+.App-intro {
+  display: flex;
+  flex-direction: column;
+}
+
 .App-link {
   color: #61dafb;
 }
