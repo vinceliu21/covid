@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import ReactGA from 'react-ga';
 import logo from './logo.svg';
 import './App.css';
 import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
@@ -19,7 +20,9 @@ class App extends Component {
   };
 
   componentDidMount() {
-      // Call our fetch function below once the component mounts
+    // Call our fetch function below once the component mounts
+    ReactGA.initialize('UA-160186542-1');
+    ReactGA.pageview("/index");
     this.callBackendAPI()
       .then(res => {console.log(res.ts_data); this.setState({ usa_cases_ts: res.ts_data,data: res.data, time: res.time, USA_total_cases: res.data.USA.total_cases, USA_total_deaths: res.data.USA.total_deaths, GLOBAL_total_cases: res.data["Total:"].total_cases, GLOBAL_total_deaths: res.data["Total:"].total_deaths});})
       .catch(err => console.log(err));
@@ -45,7 +48,7 @@ class App extends Component {
             {/* <img src={logo} className="App-logo" alt="logo" /> */}
             <h1 className="App-title">Covid-19 Stats</h1>
           </header>
-          <p style={{color:"white", fontStyle: "italic"}}>Data referenced from WHO, CDC, worldometer</p>
+          <p style={{color:"white", fontStyle: "italic"}}>Data referenced from WHO, CDC, JHU, worldometer</p>
           <p style={{color: "white", fontWeight: "bold"}}>Last updated: {this.state.time}</p>
           <div className="App-intro">
             <p style={{color: "white", fontWeight: "bold"}}><span style={{fontSize: "200%"}}>USA</span> total cases: <span style={{fontSize: "200%"}}>{this.state.USA_total_cases}</span>, total deaths: <span style={{fontSize: "200%"}}>{this.state.USA_total_deaths}</span></p>
