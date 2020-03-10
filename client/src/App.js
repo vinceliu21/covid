@@ -52,7 +52,7 @@ class App extends Component {
             <p style={{color: "white", fontWeight: "bold"}}><span style={{fontSize: "200%"}}>GLOBAL</span> total cases: <span style={{fontSize: "200%"}}>{this.state.GLOBAL_total_cases}</span>, total deaths: <span style={{fontSize: "200%"}}>{this.state.GLOBAL_total_deaths}</span></p>
             <div style={{width: "90%", margin: "0px auto"}}>
               <p style={{color: "white", fontWeight: "bold"}}>USA Total Cases</p>
-              <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" xtitle="dog" color="white" />
+              <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" color="white" />
             </div>
           </div>
           <div className="tweets">
