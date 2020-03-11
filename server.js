@@ -39,8 +39,9 @@ cron.schedule("30 * * * *", function() {
   dateTime = '(EST) ' + date_var+' '+time_var;
   try{
     // Launching the Puppeteer controlled headless browser and navigate to the Digimon website
-    puppeteer.launch({headless: true, args:['--no-sandbox']}).then(async function(browser) {
+    puppeteer.launch({headless: true, args:['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']}).then(async function(browser) {
       const page = await browser.newPage();
+      page.setDefaultNavigationTimeout(0);
       await page.goto('https://www.worldometers.info/coronavirus/');
       let result = {};
       
@@ -66,72 +67,71 @@ cron.schedule("30 * * * *", function() {
       for (var i = 0; i < covid_countries.length; i++){
         result[covid_countries[i]] = {total_cases: covid_total_cases[i], total_deaths: covid_total_deaths[i]};
       }
-
-
-  getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv')
-  .then(rows => {
-
-    let us = [];
-    usa_cases_ts = {};
-    var varDate = new Date('03-10-2020'); //dd-mm-YYYY
-    varDate.setHours(0,0,0,0);
-    var today = new Date();
-    today.setHours(0,0,0,0);
-
-    for (var i = 0; i < rows.length; i++){
-      if (rows[i]['Country/Region'] == 'US'){
-        delete rows[i]['Country/Region'];
-        delete rows[i]['Lat'];
-        delete rows[i]['Long'];
-        
-        // delete rows[i]['Province/State'];
-        for (var key in rows[i]){
-          if (key == 'Province/State'){continue;}
-          var temp = new Date(key);
-          temp.setHours(0,0,0,0);
-          if (temp < varDate){
-            if(rows[i]['Province/State'].includes(",")){
-              if (!(key in usa_cases_ts)){
-                usa_cases_ts[key] = parseInt(rows[i][key]);
-              } else{
-                usa_cases_ts[key] += parseInt(rows[i][key]);
-              }
-
-            }
-
-          }else{
-            if (!rows[i]['Province/State'].includes(",")){
-              if (!(key in usa_cases_ts)){
-                usa_cases_ts[key] = parseInt(rows[i][key]);
-              } else{
-                usa_cases_ts[key] += parseInt(rows[i][key]);
-              }
-
-            }
-          }
-        }
-      }
-    }
-
-    var today = new Date();
-    var dd = today.getDate();
-
-    var mm = today.getMonth()+1; 
-    var yyyy = '20';
-
-    today = mm+'/'+dd+'/'+yyyy;
-    console.log(today);
-
-    var result1 = result.USA.total_cases.replace(/,/g, "");
-    console.log(parseInt(result1));
-    usa_cases_ts[today] = result1;
-
-  });
-
       // Closing the Puppeteer controlled headless browser
       await browser.close();
 
       data = result;
+
+
+      getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv')
+      .then(rows => {
+
+        let us = [];
+        usa_cases_ts = {};
+        var varDate = new Date('03-10-2020'); //dd-mm-YYYY
+        varDate.setHours(0,0,0,0);
+        var today = new Date();
+        today.setHours(0,0,0,0);
+
+        for (var i = 0; i < rows.length; i++){
+          if (rows[i]['Country/Region'] == 'US'){
+            delete rows[i]['Country/Region'];
+            delete rows[i]['Lat'];
+            delete rows[i]['Long'];
+            
+            // delete rows[i]['Province/State'];
+            for (var key in rows[i]){
+              if (key == 'Province/State'){continue;}
+              var temp = new Date(key);
+              temp.setHours(0,0,0,0);
+              if (temp < varDate){
+                if(rows[i]['Province/State'].includes(",")){
+                  if (!(key in usa_cases_ts)){
+                    usa_cases_ts[key] = parseInt(rows[i][key]);
+                  } else{
+                    usa_cases_ts[key] += parseInt(rows[i][key]);
+                  }
+
+                }
+
+              }else{
+                if (!rows[i]['Province/State'].includes(",")){
+                  if (!(key in usa_cases_ts)){
+                    usa_cases_ts[key] = parseInt(rows[i][key]);
+                  } else{
+                    usa_cases_ts[key] += parseInt(rows[i][key]);
+                  }
+
+                }
+              }
+            }
+          }
+        }
+
+        var today = new Date();
+        var dd = today.getDate();
+
+        var mm = today.getMonth()+1; 
+        var yyyy = '20';
+
+        today = mm+'/'+dd+'/'+yyyy;
+        console.log(today);
+
+        var result1 = result.USA.total_cases.replace(/,/g, "");
+        console.log(parseInt(result1));
+        usa_cases_ts[today] = result1;
+
+      });
     });
   } catch(err){
     console.log("error durring cron job");
@@ -145,8 +145,9 @@ app.listen(port, () => console.log(`Listening on port ${port}`));
 app.get('/api', function(req, res) {
 
   try{
-      puppeteer.launch({headless: true, args:['--no-sandbox']}).then(async function(browser) {
+      puppeteer.launch({headless: true, args:['--no-sandbox', '--disable-setuid-sandbox', '--disable-dev-shm-usage']}).then(async function(browser) {
         const page = await browser.newPage();
+        page.setDefaultNavigationTimeout(0);
         await page.goto('https://www.worldometers.info/coronavirus/');
         let result = {};
 
@@ -179,6 +180,11 @@ app.get('/api', function(req, res) {
           // result.push({country: covid_countries[i], total_cases: covid_total_cases[i], total_deaths: covid_total_deaths[i]});
           result[covid_countries[i]] = {total_cases: covid_total_cases[i], total_deaths: covid_total_deaths[i]};
         }
+
+        // Closing the Puppeteer controlled headless browser
+        await browser.close();
+
+        data = result;
 
 
         getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv')
@@ -240,11 +246,6 @@ app.get('/api', function(req, res) {
       
       
         });
-
-        // Closing the Puppeteer controlled headless browser
-        await browser.close();
-
-        data = result;
 
         res.send({data: result});
     });
