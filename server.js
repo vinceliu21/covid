@@ -10,12 +10,77 @@ const port = process.env.PORT || 5000;
 const request=require('request');
 const csv=require('csvtojson');
 const getCSV = require('get-csv');
+
+const states = {
+
+  "Alabama": "AL" ,
+  "Alaska": "AK" ,
+  "American Samoa": "AS" ,
+  "Arizona": "AZ" ,
+  "Arkansas": "AR" ,
+  "California": "CA" ,
+  "Colorado": "CO" ,
+  "Connecticut": "CT" ,
+  "Delaware": "DE" ,
+  "District Of Columbia": "DC" ,
+  "Federated States Of Micronesia": "FM" ,
+  "Florida": "FL" ,
+  "Georgia": "GA" ,
+  "Guam": "GU" ,
+  "Hawaii": "HI" ,
+  "Idaho": "ID" ,
+  "Illinois": "IL" ,
+  "Indiana": "IN" ,
+  "Iowa": "IA" ,
+  "Kansas": "KS" ,
+  "Kentucky": "KY" ,
+  "Louisiana": "LA" ,
+  "Maine": "ME" ,
+  "Marshall Islands": "MH" ,
+  "Maryland": "MD" ,
+  "Massachusetts": "MA" ,
+  "Michigan": "MI" ,
+  "Minnesota": "MN" ,
+  "Mississippi": "MS" ,
+  "Missouri": "MO" ,
+  "Montana": "MT" ,
+  "Nebraska": "NE" ,
+  "Nevada": "NV" ,
+  "New Hampshire": "NH" ,
+  "New Jersey": "NJ" ,
+  "New Mexico": "NM" ,
+  "New York": "NY" ,
+  "North Carolina": "NC" ,
+  "North Dakota": "ND" ,
+  "Northern Mariana Islands": "MP" ,
+  "Ohio": "OH" ,
+  "Oklahoma": "OK" ,
+  "Oregon": "OR" ,
+  "Palau": "PW" ,
+  "Pennsylvania": "PA" ,
+  "Puerto Rico": "PR" ,
+  "Rhode Island": "RI" ,
+  "South Carolina": "SC" ,
+  "South Dakota": "SD" ,
+  "Tennessee": "TN" ,
+  "Texas": "TX" ,
+  "Utah": "UT" ,
+  "Vermont": "VT" ,
+  "Virgin Islands": "VI" ,
+  "Virginia": "VA" ,
+  "Washington": "WA" ,
+  "West Virginia": "WV" ,
+  "Wisconsin": "WI" ,
+  "Wyoming": "WY"
+}
+
+
  
 const readStream = request.get("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv");
 
 var usa_cases_ts = {};
 
-
+var state_cases = [];
 
 // var usa_cases_data_ts = {"1/22/20":"0","1/23/20":"0","1/24/20":"0","1/25/20":"0","1/26/20":"0","1/27/20":"1","1/28/20":"1","1/29/20":"1","1/30/20":"1","1/31/20":"1","2/1/20":"1","2/2/20":"1","2/3/20":"1","2/4/20":"1","2/5/20":"1","2/6/20":"1","2/7/20":"1","2/8/20":"1","2/9/20":"1","2/10/20":"1","2/11/20":"1","2/12/20":"1","2/13/20":"1","2/14/20":"1","2/15/20":"1","2/16/20":"1","2/17/20":"1","2/18/20":"1","2/19/20":"1","2/20/20":"1","2/21/20":"1","2/22/20":"1","2/23/20":"1","2/24/20":"1","2/25/20":"1","2/26/20":"1","2/27/20":"1","2/28/20":"1","2/29/20":"6","3/1/20":"9","3/2/20":"14","3/3/20":"21","3/4/20":"31","3/5/20":"51","3/6/20":"58","3/7/20":"71","3/8/20":"83"};
 var data = {};
@@ -78,6 +143,7 @@ cron.schedule("30 * * * *", function() {
 
         let us = [];
         usa_cases_ts = {};
+        state_caes = [];
         var varDate = new Date('03-10-2020'); //dd-mm-YYYY
         varDate.setHours(0,0,0,0);
         var today = new Date();
@@ -88,6 +154,15 @@ cron.schedule("30 * * * *", function() {
             delete rows[i]['Country/Region'];
             delete rows[i]['Lat'];
             delete rows[i]['Long'];
+
+            var tmp = [];
+            for (var key in rows[i]){
+              if (key == 'Province/State'){continue;}
+              tmp.push(new Date(key));
+            }
+
+            var max = tmp.reduce(function (a, b) { return a > b ? a : b; });
+            
             
             // delete rows[i]['Province/State'];
             for (var key in rows[i]){
@@ -111,6 +186,17 @@ cron.schedule("30 * * * *", function() {
                   } else{
                     usa_cases_ts[key] += parseInt(rows[i][key]);
                   }
+
+                  var tt = new Date(key);
+                    if (tt.getMonth() == max.getMonth() && tt.getDay() == max.getDay()){
+                      console.log("inside");
+                      if (rows[i]['Province/State'] in states){
+                        var obj = {};
+                        var id = states[rows[i]['Province/State']];
+                        obj[id] = parseInt(rows[i][key]);
+                        state_cases.push([id, parseInt(rows[i][key])]);
+                      }
+                    }
 
                 }
               }
@@ -192,6 +278,7 @@ app.get('/api', function(req, res) {
       
           let us = [];
           usa_cases_ts = {};
+          state_cases = [];
           var varDate = new Date('03-10-2020'); //dd-mm-YYYY
           varDate.setHours(0,0,0,0);
           var today = new Date();
@@ -204,6 +291,14 @@ app.get('/api', function(req, res) {
               delete rows[i]['Long'];
               
               // delete rows[i]['Province/State'];
+              var tmp = [];
+              for (var key in rows[i]){
+                if (key == 'Province/State'){continue;}
+                tmp.push(new Date(key));
+              }
+
+              var max = tmp.reduce(function (a, b) { return a > b ? a : b; });
+
               for (var key in rows[i]){
                 if (key == 'Province/State'){continue;}
                 var temp = new Date(key);
@@ -224,6 +319,17 @@ app.get('/api', function(req, res) {
                       usa_cases_ts[key] = parseInt(rows[i][key]);
                     } else{
                       usa_cases_ts[key] += parseInt(rows[i][key]);
+                    }
+
+                    var tt = new Date(key);
+                    if (tt.getMonth() == max.getMonth() && tt.getDay() == max.getDay()){
+                      console.log("inside");
+                      if (rows[i]['Province/State'] in states){
+                        var obj = {};
+                        var id = states[rows[i]['Province/State']];
+                        obj[id] = parseInt(rows[i][key]);
+                        state_cases.push([id, parseInt(rows[i][key])]);
+                      }
                     }
       
                   }
@@ -321,7 +427,7 @@ app.get('/csv', async (req, res) => {
 
 // create a GET route
 app.get('/api/data', (req, res) => {
-  res.send({ data: data, time: dateTime, ts_data: usa_cases_ts});
+  res.send({ data: data, time: dateTime, ts_data: usa_cases_ts, state_cases: state_cases});
 });
 
 

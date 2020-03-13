@@ -10,12 +10,14 @@
     "chartkick": "^3.2.0",
     "puppeteer": "^2.1.1",
     "react": "^16.13.0",
+    "react-bar-chart": "^0.1.2",
     "react-chartkick": "^0.4.0",
     "react-dom": "^16.13.0",
     "react-ga": "^2.7.0",
     "react-scripts": "3.4.0",
     "react-tweet-embed": "^1.2.2",
-    "react-twitter-embed": "^3.0.3"
+    "react-twitter-embed": "^3.0.3",
+    "react-usa-map": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
