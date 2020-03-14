@@ -326,7 +326,6 @@ app.get('/api', function(req, res) {
                       console.log("inside");
                       if (rows[i]['Province/State'] in states){
                         var obj = {};
-                        key = "3/12/20";
                         var id = states[rows[i]['Province/State']];
                         console.log("row is: " + rows[i]);
                         console.log("state is: " + id);
