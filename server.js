@@ -326,8 +326,13 @@ app.get('/api', function(req, res) {
                       console.log("inside");
                       if (rows[i]['Province/State'] in states){
                         var obj = {};
+                        key = "3/12/20";
                         var id = states[rows[i]['Province/State']];
-                        obj[id] = parseInt(rows[i][key]);
+                        console.log("row is: " + rows[i]);
+                        console.log("state is: " + id);
+                        console.log("cases are: " + rows[i][key]);
+                        console.log("day is: " + key);
+                        // obj[id] = parseInt(rows[i][key]);
                         state_cases.push([id, parseInt(rows[i][key])]);
                       }
                     }
