@@ -92,7 +92,7 @@ var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds(
 var dateTime = '(EST) ' + date+' '+time;
 
 // schedule tasks to be run on the server   
-cron.schedule("30 * * * *", function() {
+cron.schedule("*/15 * * * *", function() {
   console.log("running a task every hour");
 
 
