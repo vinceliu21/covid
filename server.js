@@ -111,19 +111,19 @@ cron.schedule("*/15 * * * *", function() {
       let result = {};
       
 
-      const covid_countries = await page.$$eval('#main_table_countries tbody tr td:nth-child(1)', function(country_names) {
+      const covid_countries = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(1)', function(country_names) {
         return country_names.map(function(country_name) {
           return country_name.innerText;
         });
       });
 
-      const covid_total_cases = await page.$$eval('#main_table_countries tbody tr td:nth-child(2)', function(total_cases) {
+      const covid_total_cases = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(2)', function(total_cases) {
         return total_cases.map(function(case_count) {
           return case_count.innerText;
         });
       });
       
-      const covid_total_deaths = await page.$$eval('#main_table_countries tbody tr td:nth-child(4)', function(total_deaths) {
+      const covid_total_deaths = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(4)', function(total_deaths) {
         return total_deaths.map(function(death_count) {
           return death_count.innerText;
         });
@@ -213,6 +213,8 @@ cron.schedule("*/15 * * * *", function() {
         today = mm+'/'+dd+'/'+yyyy;
         console.log(today);
 
+        console.log(result);
+        console.log("ok");
         var result1 = result.USA.total_cases.replace(/,/g, "");
         console.log(parseInt(result1));
         usa_cases_ts[today] = result1;
@@ -244,19 +246,19 @@ app.get('/api', function(req, res) {
         var time_var = today_var.getHours() + ":" + today_var.getMinutes() + ":" + today_var.getSeconds();
         dateTime = '(EST) ' + date_var+' '+time_var;
 
-        const covid_countries = await page.$$eval('#main_table_countries tbody tr td:nth-child(1)', function(country_names) {
+        const covid_countries = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(1)', function(country_names) {
           return country_names.map(function(country_name) {
             return country_name.innerText;
           });
         });
 
-        const covid_total_cases = await page.$$eval('#main_table_countries tbody tr td:nth-child(2)', function(total_cases) {
+        const covid_total_cases = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(2)', function(total_cases) {
           return total_cases.map(function(case_count) {
             return case_count.innerText;
           });
         });
         
-        const covid_total_deaths = await page.$$eval('#main_table_countries tbody tr td:nth-child(4)', function(total_deaths) {
+        const covid_total_deaths = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(4)', function(total_deaths) {
           return total_deaths.map(function(death_count) {
             return death_count.innerText;
           });
@@ -350,6 +352,8 @@ app.get('/api', function(req, res) {
           today = mm+'/'+dd+'/'+yyyy;
           console.log(today);
 
+          console.log(result);
+          console.log("okk");
           var result1 = result.USA.total_cases.replace(/,/g, "");
           console.log(parseInt(result1));
           usa_cases_ts[today] = result1;
