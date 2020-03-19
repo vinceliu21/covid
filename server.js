@@ -169,7 +169,7 @@ cron.schedule("*/15 * * * *", function() {
 
       for (var i = 0; i < covid_states.length; i++){
         var nm = covid_states[i];
-        if (covid_countries[i] == "Total:") {continue;}
+        if (covid_states[i] == "Total:") {continue;}
         state_cases_geo.push([nm, parseInt(covid_states_cases[i].replace(/,/g, '')), parseInt(covid_states_deaths[i].replace(/,/g, ''))]);
       }
 
@@ -343,7 +343,7 @@ app.get('/api', function(req, res) {
 
         for (var i = 0; i < covid_states.length; i++){
           var nm = covid_states[i];
-          if (covid_countries[i] == "Total:") {continue;}
+          if (covid_states[i] == "Total:") {continue;}
           state_cases_geo.push([nm, parseInt(covid_states_cases[i].replace(/,/g, '')), parseInt(covid_states_deaths[i].replace(/,/g, ''))]);
         }
 
