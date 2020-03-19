@@ -137,8 +137,32 @@ class App extends Component {
               <p style={{color: "white", fontWeight: "bold"}}>USA Total Cases</p>
               <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" color="white" />
             </div>
+
+            <div style={{width: "90%", margin: "0px auto"}}>
+              <p style={{color: "white", fontWeight: "bold"}}>[Geo Graph] Total Cases Broken Down By State</p>
+
+              <Chart
+                width={'100%'}
+                // height={'450px'}
+                chartType="GeoChart"
+                data={[["State", "Total Cases"]].concat(this.state.state_cases)}
+                options={{
+                  region: 'US',
+                  displayMode: 'regions',
+                  resolution: 'provinces',
+                  // colorAxis: { colors: ['#00853f', 'black', '#e31b23'] },
+                  backgroundColor: '#81d4fa',
+                  // datalessRegionColor: '#f8bbd0',
+                  defaultColor: '#f5f5f5',
+                }}
+                mapsApiKey="AIzaSyCudIgYTjBdvrSWDx6-M-f7RKkpUSt6ukA"
+                rootProps={{ 'data-testid': '1' }}
+              />
+            </div>
+
+
             <div style={{width: "90%", height: 400, margin: "0px auto" }}>
-              <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By State</p>
+              <p style={{color: "white", fontWeight: "bold"}}>[Bar Graph] Total Cases Broken Down By State</p>
               <ColumnChart data={this.state.state_cases} />
 
             </div>
@@ -202,8 +226,31 @@ class App extends Component {
               <p style={{color: "white", fontWeight: "bold"}}>USA Total Cases</p>
               <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" color="white" />
             </div>
+
             <div style={{width: "60%", margin: "0px auto"}}>
-              <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By State</p>
+              <p style={{color: "white", fontWeight: "bold"}}>[Geo Graph] Total Cases Broken Down By State</p>
+
+              <Chart
+                width={'100%'}
+                height={'450px'}
+                chartType="GeoChart"
+                data={[["State", "Total Cases"]].concat(this.state.state_cases)}
+                options={{
+                  region: 'US',
+                  displayMode: 'regions',
+                  resolution: 'provinces',
+                  // colorAxis: { colors: ['#00853f', 'black', '#e31b23'] },
+                  backgroundColor: '#81d4fa',
+                  // datalessRegionColor: '#f8bbd0',
+                  defaultColor: '#f5f5f5',
+                }}
+                mapsApiKey="AIzaSyCudIgYTjBdvrSWDx6-M-f7RKkpUSt6ukA"
+                rootProps={{ 'data-testid': '1' }}
+              />
+            </div>
+
+            <div style={{width: "60%", margin: "0px auto"}}>
+              <p style={{color: "white", fontWeight: "bold"}}>[Bar Graph] Total Cases Broken Down By State</p>
               <ColumnChart data={this.state.state_cases} />
 
               {/* <p style={{color: "white", fontWeight: "bold"}}>USA Heat Map</p> */}
