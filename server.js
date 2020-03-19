@@ -82,7 +82,7 @@ var usa_cases_ts = {};
 
 var state_cases = [];
 
-var country_cases = [['Country', 'Total Cases']];
+var country_cases = [['Country', 'Total Cases', 'Total Deaths']];
 
 // var usa_cases_data_ts = {"1/22/20":"0","1/23/20":"0","1/24/20":"0","1/25/20":"0","1/26/20":"0","1/27/20":"1","1/28/20":"1","1/29/20":"1","1/30/20":"1","1/31/20":"1","2/1/20":"1","2/2/20":"1","2/3/20":"1","2/4/20":"1","2/5/20":"1","2/6/20":"1","2/7/20":"1","2/8/20":"1","2/9/20":"1","2/10/20":"1","2/11/20":"1","2/12/20":"1","2/13/20":"1","2/14/20":"1","2/15/20":"1","2/16/20":"1","2/17/20":"1","2/18/20":"1","2/19/20":"1","2/20/20":"1","2/21/20":"1","2/22/20":"1","2/23/20":"1","2/24/20":"1","2/25/20":"1","2/26/20":"1","2/27/20":"1","2/28/20":"1","2/29/20":"6","3/1/20":"9","3/2/20":"14","3/3/20":"21","3/4/20":"31","3/5/20":"51","3/6/20":"58","3/7/20":"71","3/8/20":"83"};
 var data = {};
@@ -111,7 +111,7 @@ cron.schedule("*/15 * * * *", function() {
       page.setDefaultNavigationTimeout(0);
       await page.goto('https://www.worldometers.info/coronavirus/');
       let result = {};
-      country_cases = [['Country', 'Total Cases']];
+      country_cases = [['Country', 'Total Cases', 'Total Deaths']];
       
 
       const covid_countries = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(1)', function(country_names) {
@@ -140,7 +140,7 @@ cron.schedule("*/15 * * * *", function() {
         if (covid_countries[i] == "UK") {nm = "United Kingdom"}
         if (covid_countries[i] == "S. Korea") {nm = "South Korea"}
         if (covid_countries[i] == "Total:") {continue;}
-        country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, ''))]);
+        country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
       }
       // Closing the Puppeteer controlled headless browser
       await browser.close();
@@ -248,7 +248,7 @@ app.get('/api', function(req, res) {
         page.setDefaultNavigationTimeout(0);
         await page.goto('https://www.worldometers.info/coronavirus/');
         let result = {};
-        country_cases = [['Country', 'Total Cases']];
+        country_cases = [['Country', 'Total Cases', 'Total Deaths']];
 
         var today_var = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
         today_var = new Date(today_var);  
@@ -283,7 +283,7 @@ app.get('/api', function(req, res) {
           if (covid_countries[i] == "UK") {nm = "United Kingdom"}
           if (covid_countries[i] == "S. Korea") {nm = "South Korea"}
           if (covid_countries[i] == "Total:") {continue;}
-          country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, ''))]);
+          country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
         }
 
         // Closing the Puppeteer controlled headless browser
