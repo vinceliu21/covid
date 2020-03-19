@@ -32,7 +32,7 @@ class App extends Component {
   state = {
     data: {},
     usa_cases_ts: {},
-    state_cases: [],
+    state_cases_geo: [],
     country_cases: [],
     USA_total_cases: 0,
     USA_total_deaths: 0,
@@ -103,7 +103,7 @@ class App extends Component {
         console.log(res.ts_data); 
         // console.log("dogg");
         // this.setStates(ssss);
-        this.setState({ country_cases: res.country_cases, state_cases: res.state_cases, usa_cases_ts: res.ts_data,data: res.data, time: res.time, USA_total_cases: res.data.USA.total_cases, USA_total_deaths: res.data.USA.total_deaths, GLOBAL_total_cases: res.data["Total:"].total_cases, GLOBAL_total_deaths: res.data["Total:"].total_deaths});
+        this.setState({ country_cases: res.country_cases, state_cases_geo: res.state_cases_geo, usa_cases_ts: res.ts_data,data: res.data, time: res.time, USA_total_cases: res.data.USA.total_cases, USA_total_deaths: res.data.USA.total_deaths, GLOBAL_total_cases: res.data["Total:"].total_cases, GLOBAL_total_deaths: res.data["Total:"].total_deaths});
       })
       .catch(err => console.log(err));
   }
@@ -145,7 +145,7 @@ class App extends Component {
                 width={'100%'}
                 // height={'450px'}
                 chartType="GeoChart"
-                data={[["State", "Total Cases"]].concat(this.state.state_cases)}
+                data={this.state.state_cases_geo}
                 options={{
                   region: 'US',
                   displayMode: 'regions',
@@ -161,11 +161,11 @@ class App extends Component {
             </div>
 
 
-            <div style={{width: "90%", height: 400, margin: "0px auto" }}>
+            {/* <div style={{width: "90%", height: 400, margin: "0px auto" }}>
               <p style={{color: "white", fontWeight: "bold"}}>[Bar Graph] Total Cases Broken Down By State</p>
-              <ColumnChart data={this.state.state_cases} />
+              <ColumnChart data={this.state.state_cases_geo} />
 
-            </div>
+            </div> */}
             <div style={{width: "90%", margin: "0px auto"}}>
               <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By Country</p>
 
@@ -234,7 +234,7 @@ class App extends Component {
                 width={'100%'}
                 height={'450px'}
                 chartType="GeoChart"
-                data={[["State", "Total Cases"]].concat(this.state.state_cases)}
+                data={this.state.state_cases_geo}
                 options={{
                   region: 'US',
                   displayMode: 'regions',
@@ -249,13 +249,13 @@ class App extends Component {
               />
             </div>
 
-            <div style={{width: "60%", margin: "0px auto"}}>
+            {/* <div style={{width: "60%", margin: "0px auto"}}>
               <p style={{color: "white", fontWeight: "bold"}}>[Bar Graph] Total Cases Broken Down By State</p>
               <ColumnChart data={this.state.state_cases} />
 
               {/* <p style={{color: "white", fontWeight: "bold"}}>USA Heat Map</p> */}
               {/* <USAMap title="ok" width="90%" customize={config} onClick={this.mapHandler} /> */}
-            </div>
+            {/* </div> */}
 
             <div style={{width: "60%", margin: "0px auto"}}>
               <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By Country</p>

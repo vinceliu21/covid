@@ -82,6 +82,8 @@ var usa_cases_ts = {};
 
 var state_cases = [];
 
+var state_cases_geo = [['State', 'Total Cases', 'Total Deaths']];
+
 var country_cases = [['Country', 'Total Cases', 'Total Deaths']];
 
 // var usa_cases_data_ts = {"1/22/20":"0","1/23/20":"0","1/24/20":"0","1/25/20":"0","1/26/20":"0","1/27/20":"1","1/28/20":"1","1/29/20":"1","1/30/20":"1","1/31/20":"1","2/1/20":"1","2/2/20":"1","2/3/20":"1","2/4/20":"1","2/5/20":"1","2/6/20":"1","2/7/20":"1","2/8/20":"1","2/9/20":"1","2/10/20":"1","2/11/20":"1","2/12/20":"1","2/13/20":"1","2/14/20":"1","2/15/20":"1","2/16/20":"1","2/17/20":"1","2/18/20":"1","2/19/20":"1","2/20/20":"1","2/21/20":"1","2/22/20":"1","2/23/20":"1","2/24/20":"1","2/25/20":"1","2/26/20":"1","2/27/20":"1","2/28/20":"1","2/29/20":"6","3/1/20":"9","3/2/20":"14","3/3/20":"21","3/4/20":"31","3/5/20":"51","3/6/20":"58","3/7/20":"71","3/8/20":"83"};
@@ -112,6 +114,7 @@ cron.schedule("*/15 * * * *", function() {
       await page.goto('https://www.worldometers.info/coronavirus/');
       let result = {};
       country_cases = [['Country', 'Total Cases', 'Total Deaths']];
+      state_cases_geo = [['State', 'Total Cases', 'Total Deaths']];
       
 
       const covid_countries = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(1)', function(country_names) {
@@ -142,6 +145,36 @@ cron.schedule("*/15 * * * *", function() {
         if (covid_countries[i] == "Total:") {continue;}
         country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
       }
+
+
+      await page.goto('https://www.worldometers.info/coronavirus/country/us/');
+
+      const covid_states = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(1)', function(state_names) {
+        return state_names.map(function(state_name) {
+          return state_name.innerText;
+        });
+      });
+
+      const covid_states_cases = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(2)', function(cases) {
+        return cases.map(function(case_) {
+          return case_.innerText;
+        });
+      });
+
+      const covid_states_deaths = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(4)', function(deaths) {
+        return deaths.map(function(death) {
+          return death.innerText;
+        });
+      });
+
+      for (var i = 0; i < covid_states.length; i++){
+        var nm = covid_states[i];
+        if (covid_countries[i] == "Total:") {continue;}
+        state_cases_geo.push([nm, parseInt(covid_states_cases[i].replace(/,/g, '')), parseInt(covid_states_deaths[i].replace(/,/g, ''))]);
+      }
+
+
+
       // Closing the Puppeteer controlled headless browser
       await browser.close();
 
@@ -249,6 +282,7 @@ app.get('/api', function(req, res) {
         await page.goto('https://www.worldometers.info/coronavirus/');
         let result = {};
         country_cases = [['Country', 'Total Cases', 'Total Deaths']];
+        state_cases_geo = [['State', 'Total Cases', 'Total Deaths']];
 
         var today_var = new Date().toLocaleString("en-US", {timeZone: "America/New_York"});
         today_var = new Date(today_var);  
@@ -284,6 +318,33 @@ app.get('/api', function(req, res) {
           if (covid_countries[i] == "S. Korea") {nm = "South Korea"}
           if (covid_countries[i] == "Total:") {continue;}
           country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
+        }
+
+
+        await page.goto('https://www.worldometers.info/coronavirus/country/us/');
+
+        const covid_states = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(1)', function(state_names) {
+          return state_names.map(function(state_name) {
+            return state_name.innerText;
+          });
+        });
+
+        const covid_states_cases = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(2)', function(cases) {
+          return cases.map(function(case_) {
+            return case_.innerText;
+          });
+        });
+
+        const covid_states_deaths = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(4)', function(deaths) {
+          return deaths.map(function(death) {
+            return death.innerText;
+          });
+        });
+
+        for (var i = 0; i < covid_states.length; i++){
+          var nm = covid_states[i];
+          if (covid_countries[i] == "Total:") {continue;}
+          state_cases_geo.push([nm, parseInt(covid_states_cases[i].replace(/,/g, '')), parseInt(covid_states_deaths[i].replace(/,/g, ''))]);
         }
 
         // Closing the Puppeteer controlled headless browser
@@ -452,7 +513,7 @@ app.get('/csv', async (req, res) => {
 
 // create a GET route
 app.get('/api/data', (req, res) => {
-  res.send({ data: data, time: dateTime, ts_data: usa_cases_ts, state_cases: state_cases, country_cases: country_cases});
+  res.send({ data: data, time: dateTime, ts_data: usa_cases_ts, state_cases: state_cases, country_cases: country_cases, state_cases_geo: state_cases_geo});
 });
 
 
