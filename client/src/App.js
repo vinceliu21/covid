@@ -2,12 +2,13 @@ import React, { Component } from 'react';
 import ReactGA from 'react-ga';
 import logo from './logo.svg';
 import './App.css';
-import { TwitterTimelineEmbed, TwitterShareButton, TwitterFollowButton, TwitterHashtagButton, TwitterMentionButton, TwitterTweetEmbed, TwitterMomentShare, TwitterDMButton, TwitterVideoEmbed, TwitterOnAirButton } from 'react-twitter-embed';
+import { TwitterTimelineEmbed } from 'react-twitter-embed';
 // import TwitterContainer from './TwitterContainer';
-import USAMap from "react-usa-map";
-import BarChart from 'react-bar-chart';
+// import USAMap from "react-usa-map";
+// import BarChart from 'react-bar-chart';
+import {Chart} from "react-google-charts";
 
-import { LineChart, PieChart, ColumnChart } from 'react-chartkick'
+import { LineChart, PieChart, ColumnChart,GeoChart, Timeline } from 'react-chartkick'
 import 'chart.js'
 
 var config = {};
@@ -32,6 +33,7 @@ class App extends Component {
     data: {},
     usa_cases_ts: {},
     state_cases: [],
+    country_cases: [],
     USA_total_cases: 0,
     USA_total_deaths: 0,
     GLOBAL_total_cases: 0,
@@ -101,7 +103,7 @@ class App extends Component {
         console.log(res.ts_data); 
         // console.log("dogg");
         // this.setStates(ssss);
-        this.setState({ state_cases: res.state_cases, usa_cases_ts: res.ts_data,data: res.data, time: res.time, USA_total_cases: res.data.USA.total_cases, USA_total_deaths: res.data.USA.total_deaths, GLOBAL_total_cases: res.data["Total:"].total_cases, GLOBAL_total_deaths: res.data["Total:"].total_deaths});
+        this.setState({ country_cases: res.country_cases, state_cases: res.state_cases, usa_cases_ts: res.ts_data,data: res.data, time: res.time, USA_total_cases: res.data.USA.total_cases, USA_total_deaths: res.data.USA.total_deaths, GLOBAL_total_cases: res.data["Total:"].total_cases, GLOBAL_total_deaths: res.data["Total:"].total_deaths});
       })
       .catch(err => console.log(err));
   }
@@ -135,10 +137,28 @@ class App extends Component {
               <p style={{color: "white", fontWeight: "bold"}}>USA Total Cases</p>
               <LineChart data={this.state.usa_cases_ts} width="100%" name="Covid 19 data" color="white" />
             </div>
-            <div style={{width: "90%", height: 450, margin: "0px auto" }}>
+            <div style={{width: "90%", height: 400, margin: "0px auto" }}>
               <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By State</p>
               <ColumnChart data={this.state.state_cases} />
 
+            </div>
+            <div style={{width: "90%", margin: "0px auto"}}>
+              <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By Country</p>
+
+              <Chart
+                width={'100%'}
+                // height={'450px'}
+                chartType="GeoChart"
+                data={this.state.country_cases}
+                options={{
+                  // colorAxis: { colors: ['#00853f', 'black', '#e31b23'] },
+                  backgroundColor: '#81d4fa',
+                  // datalessRegionColor: '#f8bbd0',
+                  defaultColor: '#f5f5f5',
+                }}
+                mapsApiKey="AIzaSyCudIgYTjBdvrSWDx6-M-f7RKkpUSt6ukA"
+                rootProps={{ 'data-testid': '1' }}
+              />
             </div>
           </div>
           <div className="tweets">
@@ -189,6 +209,28 @@ class App extends Component {
               {/* <p style={{color: "white", fontWeight: "bold"}}>USA Heat Map</p> */}
               {/* <USAMap title="ok" width="90%" customize={config} onClick={this.mapHandler} /> */}
             </div>
+
+            <div style={{width: "60%", margin: "0px auto"}}>
+              <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By Country</p>
+
+              <Chart
+                width={'100%'}
+                height={'450px'}
+                chartType="GeoChart"
+                data={this.state.country_cases}
+                options={{
+                  // colorAxis: { colors: ['#00853f', 'black', '#e31b23'] },
+                  backgroundColor: '#81d4fa',
+                  // datalessRegionColor: '#f8bbd0',
+                  defaultColor: '#f5f5f5',
+                }}
+                mapsApiKey="AIzaSyCudIgYTjBdvrSWDx6-M-f7RKkpUSt6ukA"
+                rootProps={{ 'data-testid': '1' }}
+              />
+            </div>
+
+
+
           </div>
 
           <div className="tweets">
