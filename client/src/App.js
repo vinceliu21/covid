@@ -139,7 +139,7 @@ class App extends Component {
             </div>
 
             <div style={{width: "90%", margin: "0px auto"}}>
-              <p style={{color: "white", fontWeight: "bold"}}>[Geo Graph] Total Cases Broken Down By State</p>
+              <p style={{color: "white", fontWeight: "bold"}}>Total Cases Broken Down By State</p>
 
               <Chart
                 width={'100%'}
