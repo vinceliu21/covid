@@ -181,7 +181,7 @@ cron.schedule("*/15 * * * *", function() {
       data = result;
 
 
-      getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv')
+      getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
       .then(rows => {
 
         let us = [];
@@ -191,61 +191,74 @@ cron.schedule("*/15 * * * *", function() {
         varDate.setHours(0,0,0,0);
         var today = new Date();
         today.setHours(0,0,0,0);
-
+        
         for (var i = 0; i < rows.length; i++){
           if (rows[i]['Country/Region'] == 'US'){
             delete rows[i]['Country/Region'];
             delete rows[i]['Lat'];
             delete rows[i]['Long'];
+            delete rows[i]['Province/State'];
 
-            var tmp = [];
             for (var key in rows[i]){
-              if (key == 'Province/State'){continue;}
-              tmp.push(new Date(key));
-            }
-
-            var max = tmp.reduce(function (a, b) { return a > b ? a : b; });
-            
-            
-            // delete rows[i]['Province/State'];
-            for (var key in rows[i]){
-              if (key == 'Province/State'){continue;}
-              var temp = new Date(key);
-              temp.setHours(0,0,0,0);
-              if (temp < varDate){
-                if(rows[i]['Province/State'].includes(",")){
-                  if (!(key in usa_cases_ts)){
-                    usa_cases_ts[key] = parseInt(rows[i][key]);
-                  } else{
-                    usa_cases_ts[key] += parseInt(rows[i][key]);
-                  }
-
-                }
-
-              }else{
-                if (!rows[i]['Province/State'].includes(",")){
-                  if (!(key in usa_cases_ts)){
-                    usa_cases_ts[key] = parseInt(rows[i][key]);
-                  } else{
-                    usa_cases_ts[key] += parseInt(rows[i][key]);
-                  }
-
-                  var tt = new Date(key);
-                    if (tt.getMonth() == max.getMonth() && tt.getDay() == max.getDay()){
-                      console.log("inside");
-                      if (rows[i]['Province/State'] in states){
-                        var obj = {};
-                        var id = states[rows[i]['Province/State']];
-                        obj[id] = parseInt(rows[i][key]);
-                        state_cases.push([id, parseInt(rows[i][key])]);
-                      }
-                    }
-
-                }
-              }
+              usa_cases_ts[key] = parseInt(rows[i][key]); 
             }
           }
         }
+
+        // for (var i = 0; i < rows.length; i++){
+        //   if (rows[i]['Country/Region'] == 'US'){
+        //     delete rows[i]['Country/Region'];
+        //     delete rows[i]['Lat'];
+        //     delete rows[i]['Long'];
+
+        //     var tmp = [];
+        //     for (var key in rows[i]){
+        //       if (key == 'Province/State'){continue;}
+        //       tmp.push(new Date(key));
+        //     }
+
+        //     var max = tmp.reduce(function (a, b) { return a > b ? a : b; });
+            
+            
+        //     // delete rows[i]['Province/State'];
+        //     for (var key in rows[i]){
+        //       if (key == 'Province/State'){continue;}
+        //       var temp = new Date(key);
+        //       temp.setHours(0,0,0,0);
+        //       if (temp < varDate){
+        //         if(rows[i]['Province/State'].includes(",")){
+        //           if (!(key in usa_cases_ts)){
+        //             usa_cases_ts[key] = parseInt(rows[i][key]);
+        //           } else{
+        //             usa_cases_ts[key] += parseInt(rows[i][key]);
+        //           }
+
+        //         }
+
+        //       }else{
+        //         if (!rows[i]['Province/State'].includes(",")){
+        //           if (!(key in usa_cases_ts)){
+        //             usa_cases_ts[key] = parseInt(rows[i][key]);
+        //           } else{
+        //             usa_cases_ts[key] += parseInt(rows[i][key]);
+        //           }
+
+        //           var tt = new Date(key);
+        //             if (tt.getMonth() == max.getMonth() && tt.getDay() == max.getDay()){
+        //               console.log("inside");
+        //               if (rows[i]['Province/State'] in states){
+        //                 var obj = {};
+        //                 var id = states[rows[i]['Province/State']];
+        //                 obj[id] = parseInt(rows[i][key]);
+        //                 state_cases.push([id, parseInt(rows[i][key])]);
+        //               }
+        //             }
+
+        //         }
+        //       }
+        //     }
+        //   }
+        // }
 
         var today = new Date();
         var dd = today.getDate();
@@ -353,7 +366,7 @@ app.get('/api', function(req, res) {
         data = result;
 
 
-        getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_19-covid-Confirmed.csv')
+        getCSV('https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_global.csv')
         .then(rows => {
       
           let us = [];
@@ -363,64 +376,77 @@ app.get('/api', function(req, res) {
           varDate.setHours(0,0,0,0);
           var today = new Date();
           today.setHours(0,0,0,0);
-      
+
           for (var i = 0; i < rows.length; i++){
             if (rows[i]['Country/Region'] == 'US'){
               delete rows[i]['Country/Region'];
               delete rows[i]['Lat'];
               delete rows[i]['Long'];
-              
-              // delete rows[i]['Province/State'];
-              var tmp = [];
-              for (var key in rows[i]){
-                if (key == 'Province/State'){continue;}
-                tmp.push(new Date(key));
-              }
-
-              var max = tmp.reduce(function (a, b) { return a > b ? a : b; });
+              delete rows[i]['Province/State'];
 
               for (var key in rows[i]){
-                if (key == 'Province/State'){continue;}
-                var temp = new Date(key);
-                temp.setHours(0,0,0,0);
-                if (temp < varDate){
-                  if(rows[i]['Province/State'].includes(",")){
-                    if (!(key in usa_cases_ts)){
-                      usa_cases_ts[key] = parseInt(rows[i][key]);
-                    } else{
-                      usa_cases_ts[key] += parseInt(rows[i][key]);
-                    }
-      
-                  }
-      
-                }else{
-                  if (!rows[i]['Province/State'].includes(",")){
-                    if (!(key in usa_cases_ts)){
-                      usa_cases_ts[key] = parseInt(rows[i][key]);
-                    } else{
-                      usa_cases_ts[key] += parseInt(rows[i][key]);
-                    }
-
-                    var tt = new Date(key);
-                    if (tt.getMonth() == max.getMonth() && tt.getDay() == max.getDay()){
-                      console.log("inside");
-                      if (rows[i]['Province/State'] in states){
-                        var obj = {};
-                        var id = states[rows[i]['Province/State']];
-                        console.log("row is: " + rows[i]);
-                        console.log("state is: " + id);
-                        console.log("cases are: " + rows[i][key]);
-                        console.log("day is: " + key);
-                        // obj[id] = parseInt(rows[i][key]);
-                        state_cases.push([id, parseInt(rows[i][key])]);
-                      }
-                    }
-      
-                  }
-                }
+                usa_cases_ts[key] = parseInt(rows[i][key]); 
               }
             }
           }
+      
+          // for (var i = 0; i < rows.length; i++){
+          //   if (rows[i]['Country/Region'] == 'US'){
+          //     delete rows[i]['Country/Region'];
+          //     delete rows[i]['Lat'];
+          //     delete rows[i]['Long'];
+              
+          //     // delete rows[i]['Province/State'];
+          //     var tmp = [];
+          //     for (var key in rows[i]){
+          //       if (key == 'Province/State'){continue;}
+          //       tmp.push(new Date(key));
+          //     }
+
+          //     var max = tmp.reduce(function (a, b) { return a > b ? a : b; });
+
+          //     for (var key in rows[i]){
+          //       if (key == 'Province/State'){continue;}
+          //       var temp = new Date(key);
+          //       temp.setHours(0,0,0,0);
+          //       if (temp < varDate){
+          //         if(rows[i]['Province/State'].includes(",")){
+          //           if (!(key in usa_cases_ts)){
+          //             usa_cases_ts[key] = parseInt(rows[i][key]);
+          //           } else{
+          //             usa_cases_ts[key] += parseInt(rows[i][key]);
+          //           }
+      
+          //         }
+      
+          //       }else{
+          //         if (!rows[i]['Province/State'].includes(",")){
+          //           if (!(key in usa_cases_ts)){
+          //             usa_cases_ts[key] = parseInt(rows[i][key]);
+          //           } else{
+          //             usa_cases_ts[key] += parseInt(rows[i][key]);
+          //           }
+
+          //           var tt = new Date(key);
+          //           if (tt.getMonth() == max.getMonth() && tt.getDay() == max.getDay()){
+          //             console.log("inside");
+          //             if (rows[i]['Province/State'] in states){
+          //               var obj = {};
+          //               var id = states[rows[i]['Province/State']];
+          //               console.log("row is: " + rows[i]);
+          //               console.log("state is: " + id);
+          //               console.log("cases are: " + rows[i][key]);
+          //               console.log("day is: " + key);
+          //               // obj[id] = parseInt(rows[i][key]);
+          //               state_cases.push([id, parseInt(rows[i][key])]);
+          //             }
+          //           }
+      
+          //         }
+          //       }
+          //     }
+          //   }
+          // }
           var today = new Date();
           var dd = today.getDate();
 
