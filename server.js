@@ -143,6 +143,7 @@ cron.schedule("*/15 * * * *", function() {
         if (covid_countries[i] == "UK") {nm = "United Kingdom"}
         if (covid_countries[i] == "S. Korea") {nm = "South Korea"}
         if (covid_countries[i] == "Total:") {continue;}
+        if (covid_countries[i] == "World") {continue;}
         country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
       }
 
@@ -191,7 +192,7 @@ cron.schedule("*/15 * * * *", function() {
         varDate.setHours(0,0,0,0);
         var today = new Date();
         today.setHours(0,0,0,0);
-        
+
         for (var i = 0; i < rows.length; i++){
           if (rows[i]['Country/Region'] == 'US'){
             delete rows[i]['Country/Region'];
@@ -330,6 +331,7 @@ app.get('/api', function(req, res) {
           if (covid_countries[i] == "UK") {nm = "United Kingdom"}
           if (covid_countries[i] == "S. Korea") {nm = "South Korea"}
           if (covid_countries[i] == "Total:") {continue;}
+          if (covid_countries[i] == "World") {continue;}
           country_cases.push([nm, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
         }
 
