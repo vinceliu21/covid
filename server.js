@@ -37,21 +37,21 @@ function ParseData() {
         state_cases_geo = [['State', 'Total Cases', 'Total Deaths']];
   
         // Get the country names
-        const covid_countries = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(1)', function(country_names) {
+        const covid_countries = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(2)', function(country_names) {
           return country_names.map(function(country_name) {
             return country_name.innerText;
           });
         });
   
         // Get the total cases per country
-        const covid_total_cases = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(2)', function(total_cases) {
+        const covid_total_cases = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(3)', function(total_cases) {
           return total_cases.map(function(case_count) {
             return case_count.innerText;
           });
         });
 
         // Get the total deaths per country
-        const covid_total_deaths = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(4)', function(total_deaths) {
+        const covid_total_deaths = await page.$$eval('#main_table_countries_today tbody tr td:nth-child(5)', function(total_deaths) {
           return total_deaths.map(function(death_count) {
             return death_count.innerText;
           });
@@ -68,7 +68,7 @@ function ParseData() {
           if (covid_countries[i] == "World") {continue;}
           country_cases.push([country_name, parseInt(covid_total_cases[i].replace(/,/g, '')), parseInt(covid_total_deaths[i].replace(/,/g, ''))]);
         }
-  
+        console.log("SCRAPING: completed country scraping");
         // Now get the USA state cases
         await page.goto('https://www.worldometers.info/coronavirus/country/us/');
   
@@ -100,7 +100,7 @@ function ParseData() {
           if (covid_states[i] == "USA Total") {continue;}
           state_cases_geo.push([state_name, parseInt(covid_states_cases[i].replace(/,/g, '')), parseInt(covid_states_deaths[i].replace(/,/g, ''))]);
         }
-
+        console.log("SCRAPING: completed state scraping");
         // Closing the Puppeteer controlled headless browser
         await browser.close();
   
@@ -130,9 +130,7 @@ function ParseData() {
           var mm = today.getMonth()+1; 
           var yyyy = '20';
           today = mm+'/'+dd+'/'+yyyy;
-  
           usa_cases_ts[today] = case_data.USA.total_cases.replace(/,/g, "");
-  
         });
       });
     } catch(err){
