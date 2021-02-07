@@ -73,21 +73,21 @@ function ParseData() {
         await page.goto('https://www.worldometers.info/coronavirus/country/us/');
   
         // Get the state name
-        const covid_states = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(1)', function(state_names) {
+        const covid_states = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(2)', function(state_names) {
           return state_names.map(function(state_name) {
             return state_name.innerText;
           });
         });
   
         // Get the state total cases
-        const covid_states_cases = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(2)', function(cases) {
+        const covid_states_cases = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(3)', function(cases) {
           return cases.map(function(case_) {
             return case_.innerText;
           });
         });
   
         // Get the state total deaths
-        const covid_states_deaths = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(4)', function(deaths) {
+        const covid_states_deaths = await page.$$eval('#usa_table_countries_today tbody tr td:nth-child(5)', function(deaths) {
           return deaths.map(function(death) {
             return death.innerText;
           });
@@ -117,7 +117,6 @@ function ParseData() {
               delete rows[i]['Lat'];
               delete rows[i]['Long'];
               delete rows[i]['Province/State'];
-  
               for (var key in rows[i]){
                 usa_cases_ts[key] = parseInt(rows[i][key]); 
               }
@@ -128,7 +127,7 @@ function ParseData() {
           var today = new Date();
           var dd = today.getDate();
           var mm = today.getMonth()+1; 
-          var yyyy = '20';
+          var yyyy = '21';
           today = mm+'/'+dd+'/'+yyyy;
           usa_cases_ts[today] = case_data.USA.total_cases.replace(/,/g, "");
         });
